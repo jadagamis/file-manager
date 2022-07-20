@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+import datetime
+
 import click
 import os
 import shutil
 import hashlib
 
 ext = (".jpeg", ".png", ".py", ".docx", ".pdf")
-
 
 @click.group()
 def main():
@@ -74,13 +75,58 @@ def display(copies):
 
 
 @main.command('sort', short_help="sorts files by month or day")
-def sort():
-    print("blank")
+@click.argument('dir', nargs=1)
+def sort(dir):
+    abs_directory = os.path.abspath(dir)
+    make_folders(abs_directory, map_files(dir, abs_directory))
+
+
+def checking_same_dates(datestamp, library):
+    if datestamp not in library:
+        library.append(datestamp)
+
+
+def convert_to_standard_format(datestamp):
+    standard_date = datetime.datetime.fromtimestamp(datestamp)
+    shortened = standard_date.strftime('%Y-%m-%d')
+    return shortened
+
+
+def map_files(dir, abs_directory):
+    library = {}
+    ordered_datestamps = []
+    for file in os.listdir(dir):
+        print(file)
+        abs_file = os.path.join(abs_directory, file)
+        stat = os.stat(abs_file)
+        og_datestamp = stat.st_mtime
+        checking_same_dates(convert_to_standard_format(og_datestamp), ordered_datestamps)
+    print(ordered_datestamps)
+    ordered_datestamps = sorted(ordered_datestamps)
+    for i in ordered_datestamps:
+        library[i] = []
+    for file in os.listdir(dir):
+        abs_file = os.path.join(abs_directory, file)
+        stat = os.stat(abs_file)
+        og_datestamp = stat.st_ctime
+
+        for key in library:
+            if convert_to_standard_format(og_datestamp) == str(key):
+                library[key].append(abs_file)
+    return library
+
+
+def make_folders(abs_directory, library):
+    for key in library:
+        path = os.path.join(abs_directory, key)
+        os.mkdir(path)
+        for item in library[key]:
+            shutil.move(item, path)
 
 
 @main.command('copy', short_help="copy files to a separate location")
 @click.argument('src', nargs=1)
-def sort():
+def copy():
     print("blank")
 
 
