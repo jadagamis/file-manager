@@ -96,12 +96,10 @@ def map_files(dir, abs_directory):
     library = {}
     ordered_datestamps = []
     for file in os.listdir(dir):
-        print(file)
         abs_file = os.path.join(abs_directory, file)
         stat = os.stat(abs_file)
         og_datestamp = stat.st_mtime
         checking_same_dates(convert_to_standard_format(og_datestamp), ordered_datestamps)
-    print(ordered_datestamps)
     ordered_datestamps = sorted(ordered_datestamps)
     for i in ordered_datestamps:
         library[i] = []
