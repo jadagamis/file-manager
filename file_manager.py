@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import datetime
 
 import click
@@ -6,7 +6,8 @@ import os
 import shutil
 import hashlib
 
-ext = (".jpeg", ".png", ".py", ".docx", ".pdf")
+ext = (".jpeg", ".png", ".py", ".docx", ".pdf", "mov")
+
 
 @click.group()
 def main():
@@ -98,7 +99,7 @@ def map_files(dir, abs_directory):
     for file in os.listdir(dir):
         abs_file = os.path.join(abs_directory, file)
         stat = os.stat(abs_file)
-        og_datestamp = stat.st_mtime
+        og_datestamp = stat.st_ctime
         checking_same_dates(convert_to_standard_format(og_datestamp), ordered_datestamps)
     ordered_datestamps = sorted(ordered_datestamps)
     for i in ordered_datestamps:
