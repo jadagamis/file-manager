@@ -36,7 +36,7 @@ def purge(dir):
     print(f"Cleaning now...")
     print("\n")
     copies = calculate_digests(dir)
-    display(copies)
+    delete_files(copies)
 
 
 def check_for_copy(file, file_hash, digest_map, copies):
@@ -63,15 +63,15 @@ def calculate_digests(dir):
                 while chunk:
                     file_hash.update(chunk)
                     chunk = f.read(block_size)
-                if not check_for_copy(file, file_hash.hexdigest(), digest_map, copies):
+                if not check_for_copy(abs_file, file_hash.hexdigest(), digest_map, copies):
                     digest_map[file] = file_hash.hexdigest()
     return copies
 
 
-def display(copies):
-    print("Possible duplicate files are:")
-    for i in copies:
-        print(i)
+def delete_files(copies):
+    for c in copies:
+        print(f"Deleting {c}")
+        os.remove(c)
 
 
 @main.command('sort', short_help="sorts files by month or day")
