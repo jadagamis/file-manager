@@ -6,7 +6,7 @@ import os
 import shutil
 import hashlib
 
-ext = (".jpeg", ".png", ".py", ".docx", ".pdf", "mov")
+ext = (".jpeg", ".png", ".py", ".docx", ".pdf", ".mov", ".jpg", ".raw")
 
 
 @click.group()
